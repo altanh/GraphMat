@@ -33,6 +33,8 @@
 #ifndef SRC_DCSCTILE_H_
 #define SRC_DCSCTILE_H_
 
+#include <immintrin.h>
+
 #include <string>
 #include <algorithm>
 #include <vector>

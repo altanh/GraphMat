@@ -13,7 +13,7 @@ TESTBINDIR=./testbin
 ifeq (${CXX}, icpc)
   CXX_OPTIONS=-qopenmp -std=c++11
 else
-  CXX_OPTIONS=-fopenmp --std=c++11 -I/usr/include/mpi/
+  CXX_OPTIONS=-fopenmp --std=c++11 -I/usr/include/mpi/ -march=native
 endif
 
 CXX_OPTIONS+=-I$(INCLUDEDIR) -I$(DIST_PRIMITIVES_PATH)
@@ -51,7 +51,7 @@ apps = $(patsubst $(SRCDIR)/%.cpp, $(BINDIR)/%, $(sources))
 all: $(apps)
 	
 $(BINDIR)/% : $(SRCDIR)/%.cpp $(deps)  
-	$(MPICXX) -cxx=$(CXX) $(CXX_OPTIONS) -o $@ $< $(LD_OPTIONS)
+	$(MPICXX) $(CXX_OPTIONS) -o $@ $< $(LD_OPTIONS)
 
 # --- Test --- #
 test: $(TESTBINDIR)/test 

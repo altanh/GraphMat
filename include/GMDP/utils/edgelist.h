@@ -33,6 +33,8 @@
 #ifndef SRC_EDGELIST_H_
 #define SRC_EDGELIST_H_
 
+#include <immintrin.h>
+
 #include <string>
 
 template <typename T>
