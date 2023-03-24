@@ -13,7 +13,7 @@ TESTBINDIR=./testbin
 ifeq (${CXX}, icpc)
   CXX_OPTIONS=-qopenmp -std=c++11
 else
-  CXX_OPTIONS=-fopenmp --std=c++11 -I/usr/include/mpi/ -march=native
+  CXX_OPTIONS=-fopenmp --std=c++11 -I/usr/include/mpi/
 endif
 
 CXX_OPTIONS+=-I$(INCLUDEDIR) -I$(DIST_PRIMITIVES_PATH)
@@ -60,10 +60,10 @@ test_src = $(wildcard $(TESTDIR)/*.cpp)
 test_objects = $(patsubst $(TESTDIR)/%.cpp, $(TESTBINDIR)/%.o, $(test_src))
 
 $(TESTBINDIR)/%.o : $(TESTDIR)/%.cpp $(deps) $(test_headers) 
-	$(MPICXX) -cxx=$(CXX) $(CXX_OPTIONS) -I$(CATCHDIR)/include -c $< -o $@ $(LD_OPTIONS)
+	$(MPICXX) $(CXX_OPTIONS) -I$(CATCHDIR)/include -c $< -o $@ $(LD_OPTIONS)
 
 $(TESTBINDIR)/test: $(test_objects) 
-	$(MPICXX) -cxx=$(CXX) $(CXX_OPTIONS) -I$(CATCHDIR)/include -o $(TESTBINDIR)/test $(test_objects) $(LD_OPTIONS)
+	$(MPICXX) $(CXX_OPTIONS) -I$(CATCHDIR)/include -o $(TESTBINDIR)/test $(test_objects) $(LD_OPTIONS)
 
 # --- clean --- #
 

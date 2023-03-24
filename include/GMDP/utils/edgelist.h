@@ -145,7 +145,15 @@ void get_maxid_and_nnz(FILE* fp, int* m, int* n, unsigned long int* nnz, bool bi
       *n = tmp_[1];
       *nnz = tmp_[2];
     } else {
-      int ret = fscanf(fp, "%d %d %u", &(tmp_[0]), &(tmp_[1]), &(tmp_[2]));
+      // skip comments by checking for % at the beginning of the line
+      char line[1024];  // TODO: highly unlikely to be > 1024, but possible
+      while (fgets(line, 1024, fp) != NULL) {
+        if (line[0] != '%') {
+          break;
+        }
+      }
+      // TODO: fail if no line is read
+      int ret = sscanf(line, "%d %d %u", &(tmp_[0]), &(tmp_[1]), &(tmp_[2]));
       assert(ret == 3);
       *m = tmp_[0];
       *n = tmp_[1];
