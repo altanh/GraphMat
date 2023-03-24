@@ -54,15 +54,21 @@ void run_connected_components(char* filename) {
 
   GraphMat::graph_program_clear(cc_tmp);
 
-  // print number of connected components on master MPI rank
-  if (GraphMat::get_global_myrank() == 0) {
-    int num_connected_components = 0;
-    for (int i = 1; i <= num_vertices; i++) {
-      if (G.getVertexproperty(i) == i) {
-        num_connected_components++;
-      }
+  // NOTE: vertex properties are sharded; getVertexproperty returns default
+  //       value if vertex is not owned by current rank.
+
+  // get number of connected components on each rank and reduce
+  int num_connected_components = 0;
+  for (int i = 1; i <= num_vertices; i++) {
+    if (G.vertexNodeOwner(i) && G.getVertexproperty(i) == i) {
+      num_connected_components++;
     }
-    std::cout << "Number of connected components: " << num_connected_components << std::endl;
+  }
+  int total_num_connected_components = 0;
+  MPI_Reduce(&num_connected_components, &total_num_connected_components, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+
+  if (GraphMat::get_global_myrank() == 0) {
+    std::cout << "Number of connected components: " << total_num_connected_components << std::endl;
   }
 }
 
